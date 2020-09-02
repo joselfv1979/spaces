@@ -4,7 +4,7 @@
     <h1>Detalles de la reserva:</h1>
     <ul>
       <li>
-        <p>Reserva a nombre de: {{ book.client }} <p/>
+        <p>Reserva a nombre de: {{ book.name }} <p/>
         <p>Lugar: {{ book.place }}</p>
         <br />
         <p>Dirección: {{ book.address }}</p>
