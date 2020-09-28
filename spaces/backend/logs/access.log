@@ -13640,3 +13640,5 @@
 ::1 - - [16/Sep/2020:14:08:01 +0000] "POST /upload/ HTTP/1.1" 500 99 "http://localhost:8080/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36"
 ::1 - - [16/Sep/2020:14:30:59 +0000] "OPTIONS /spaces HTTP/1.1" 204 0 "http://localhost:8080/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36"
 ::1 - - [16/Sep/2020:14:30:59 +0000] "GET /spaces HTTP/1.1" 200 12474 "http://localhost:8080/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36"
+::1 - - [28/Sep/2020:09:45:55 +0000] "GET /spaces HTTP/1.1" 200 12474 "http://localhost:8080/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36"
+::1 - - [28/Sep/2020:09:46:02 +0000] "GET /spaces/39 HTTP/1.1" 200 398 "http://localhost:8080/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36"
