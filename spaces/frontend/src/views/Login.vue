@@ -101,6 +101,7 @@ export default {
   display: flex;
   align-items: center;
   vertical-align: center;
+  background: linear-gradient(white,#2c3e50);
 }
 
 .form {

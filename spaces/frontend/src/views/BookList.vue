@@ -3,24 +3,43 @@
   <div id="main">
     <!-- TÍTULO PERSONALIZADO CON VUE-HEADFUL -->
     <vue-headful title="Reservas" />
-    <router-link :to="{ name: 'User' }"><button>Volver</button></router-link>
+    <router-link :to="{ name: 'User' }">
+      <button>Volver</button>
+    </router-link>
     <!-- DECLARACIÓN DEL COMPONENTE QUE MUESTRA LAS RESERVAS -->
     <h3>Lista de reservas:</h3>
     <div class="book-list" v-if="seeBooks">
-      <bookcard @score="getIndex" @remove="deleteBook" v-for="book in books" :key="book.id" :book="book" />
+      <bookcard
+        @score="getIndex"
+        @remove="deleteBook"
+        @see="seeDetail"
+        v-for="book in books"
+        :key="book.id"
+        :book="book"
+      />
     </div>
     <div v-else>
       <p>No hay ninguna reserva</p>
     </div>
+    <div v-show="modal" class="modal">
+        <div class="modalBox">
+          <!-- DECLARACIÓN DEL COMPONENTE QUE MUESTRA EL RESUMEN DE LA RESERVA -->
+          <bookdetail :book="book" :list="list"/>
+          <!-- BOTÓN PARA ESCONDER EL MODAL -->
+          <button @click="hide()">Ok</button>
+        </div>
+      </div>
     <!-- MODAL PARA REALIZAR LA VALORACIÓN DE UNA RESERVA -->
     <div v-show="seeModal" class="modal">
       <div class="modalBox">
         <h3>Añade tu valoración:</h3>
         <!-- INPUTS VINCULADOS AL DATA CON V-MODEL -->
-        <input type="number" min="0" max="5" placeholder="Puntuación de 1-5" v-model="score" />
-        <br />
-        <input type="text" placeholder="Añade un comentario" v-model="comment" />
-        <br />
+        <div class="score-box">
+          <input type="number" min="0" max="5" placeholder="Puntuación de 0-5" v-model="score" />
+        </div>
+        <div class="score-box">
+          <input type="text" placeholder="Añade un comentario" v-model="comment" />
+        </div>
         <!-- BOTÓN PARA CANCELAR LA OPERACIÓN Y OCULTAR EL MODAL -->
         <button @click="cancel()">Cancelar</button>
         <!-- BOTÓN PARA ENVIAR LA VALORACIÓN -->
@@ -43,12 +62,13 @@ import {
 } from "./../../../backend/requests/book";
 import { getAuthToken } from "./../../../backend/requests/user";
 import bookcard from "@/components/BookCard.vue";
+import bookdetail from '@/components/BookDetail.vue'
 
 export default {
   name: "BookList",
   components: {
     // REGISTRO DE COMPONENTES
-    bookcard,
+    bookcard, bookdetail
   },
   computed: {
     seeBooks() {
@@ -58,11 +78,14 @@ export default {
   data() {
     // VARIABLES DE LA VISTA
     return {
+      list: true,
       books: [],
+      book: {},
       score: "",
       comment: "",
       seeModal: false,
       bookIndex: "",
+      modal: false
     };
   },
   methods: {
@@ -72,41 +95,50 @@ export default {
       this.bookIndex = id;
     },
 
-    async deleteBook(id) {
-      let token = getAuthToken();
-      if (await removeBook(id, token)) {
-        Swal.fire({
-          text: "Reserva cancelada",
-          onClose: () => {
-            this.getUserBooks();
-          },
-        });
-      }
-    },
-
     // FUNCIÓN QUE OBTIENE LAS RESERVAS DE UN USUARIO
     async getUserBooks() {
       let token = getAuthToken();
       const result = await getBooks(token);
       localStorage.setItem("BOOKS", JSON.stringify(result.data));
       const now = moment().format("YYYY-MM-DD");
-      this.books = result.data.map((item) => {
-        item.bookEnd = moment(item.end_time)
-          .utcOffset(120)
-          .format("DD-MM-YYYY");
-        item.end = moment(item.end_time).utcOffset(120).format("YYYY-MM-DD");
-        if (moment(item.end).isBefore(now)) {
+      this.books = result.map((item) => {
+        if (moment(item.end_time).isBefore(now)) {
           item.status = "Reserva consumida";
         } else {
           item.status = "Reserva pendiente";
         }
-        return {
-          id: item.id,
-          end: item.bookEnd,
-          hotel: item.hotel,
-          status: item.status,
-        };
+        return item
       });
+    },
+    seeDetail(bookId){
+      let item = this.books.filter(item => item.id === bookId)
+      this.book = item[0]
+      this.modal = true
+    },
+    hide() {
+      // OCULTACIÓN DEL MODAL Y REDIRECCIÓN AL HOME
+      this.modal = false;
+    },
+    // FUNCIÓN PARA CANCELAR UNA RESERVA
+    async deleteBook(id) {
+      let token = getAuthToken();
+      Swal.fire({
+        text: "Estás seguro de eliminar la reserva?",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Eliminar",
+      }).then((result) => {
+        if (result.value) {
+          Swal.fire({
+            text: "Reserva cancelada.",
+            onClose: () => {
+              removeBook(id, token)
+              .then(() => this.getUserBooks())
+            },
+          });
+        }
+      })
     },
     // FUNCIÓN PARA ENVIAR LA VALORACIÓN
     async send() {
@@ -139,12 +171,15 @@ export default {
   created() {
     // CARGA DE LAS RESERVAS DE UN USUARIO AL CREAR LA VISTA
     this.getUserBooks();
+    console.log(this.$route.name);
   },
 };
 </script>
 
 <style scoped>
-
+#main {
+  background: linear-gradient(white,#2c3e50);
+}
 .book-list {
   display: flex;
   flex-wrap: wrap;
@@ -152,8 +187,12 @@ export default {
   justify-content: center;
 }
 
-h3{
+h3 {
   margin-bottom: 20px;
+}
+
+.score-box {
+  margin: 20px;
 }
 
 input {
@@ -173,5 +212,4 @@ input:hover {
   border: 2px solid #3b83bd;
   cursor: pointer;
 }
-
 </style>

@@ -4,9 +4,9 @@
     <!-- TÍTULO PERSONALIZADO CON VUE-HEADFUL -->
     <vue-headful title="Espacios" />
     <div>
-      <router-link :to="{ name: 'User' }">
+      <!-- <router-link :to="{ name: 'User' }">
         <button>Volver</button>
-      </router-link>
+      </router-link>-->
       <div class="container">
         <div class="form">
           <h3>Crea tu nuevo espacio</h3>
@@ -35,38 +35,38 @@
           </div>
           <div class="bordered-box">
             <div class="group">
-            <div class="options">
-              <h4>Disposición</h4>
-              <div>
-                <label for="uLayout">
-                  <input type="checkbox" v-model="uLayout" />En U
-                </label>
+              <div class="options">
+                <h4>Disposición</h4>
+                <div>
+                  <label for="uLayout">
+                    <input type="checkbox" v-model="uLayout" />En U
+                  </label>
+                </div>
+                <div>
+                  <label for="classLayout">
+                    <input type="checkbox" v-model="classLayout" />En escuela
+                  </label>
+                </div>
+                <div>
+                  <label for="theaterLayout">
+                    <input type="checkbox" v-model="theaterLayout" />En teatro
+                  </label>
+                </div>
               </div>
-              <div>
-                <label for="classLayout">
-                  <input type="checkbox" v-model="classLayout" />En escuela
-                </label>
-              </div>
-              <div>
-                <label for="theaterLayout">
-                  <input type="checkbox" v-model="theaterLayout" />En teatro
-                </label>
+              <div class="options">
+                <h4>Tipo</h4>
+                <div>
+                  <label for="meetingType">
+                    <input type="checkbox" v-model="meetingType" />Reuniones
+                  </label>
+                </div>
+                <div>
+                  <label for="hallType">
+                    <input type="checkbox" v-model="hallType" />Eventos
+                  </label>
+                </div>
               </div>
             </div>
-            <div class="options">
-              <h4>Tipo</h4>
-              <div>
-                <label for="meetingType">
-                  <input type="checkbox" v-model="meetingType" />Reuniones
-                </label>
-              </div>
-              <div>
-                <label for="hallType">
-                  <input type="checkbox" v-model="hallType" />Eventos
-                </label>
-              </div>
-            </div>
-          </div>
           </div>
           <div class="bordered-box">
             <div class="group">
@@ -107,20 +107,24 @@
           </div>
           <div class="last-box">
             <div class="box-image">
-              <div>
-                <input type="text" v-model="image1" class="field" placeholder="Imagen 1 (URL)" />
-              </div>
-              <div>
-                <input type="text" v-model="image2" class="field" placeholder="Imagen 2 (URL)" />
-              </div>
-            </div>
-            <textarea
+              <textarea
               v-model="description"
               placeholder="Descripción de la sala"
               class="field"
               rows="5"
               cols="30"
             ></textarea>
+              <div>
+                <input
+                  type="file"
+                  @change="onFileSelected"
+                  ref="images"
+                  name="spaces"
+                  id="img"
+                  multiple
+                />
+              </div>
+            </div>
             <div class="center">
               <!-- BOTÓN PARA ENVIAR LOS DATOS -->
               <button @click="addSpace()">Enviar Datos</button>
@@ -138,7 +142,7 @@
 import axios from "axios";
 import Swal from "sweetalert2";
 import { getId, getAuthToken } from "./../../../backend/requests/user";
-import { createSpace } from "./../../../backend/requests/space";
+import { createSpace, saveImage } from "./../../../backend/requests/space";
 
 export default {
   name: "AddSpace",
@@ -161,18 +165,31 @@ export default {
       wifi: 0,
       projector: 0,
       screen: 0,
-      image1: "",
-      image2: "",
+      image1: '',
+      image2: '',
+      newImage1: null,
+      newImage2: null,
       description: "",
     };
   },
   methods: {
     // FUNCIÓN PARA CREAR UN ESPACIO NUEVO
+    onFileSelected() {
+      this.newImage1 = this.$refs.images.files[0];
+      this.newImage2 = this.$refs.images.files[1];
+    },
+
     async addSpace() {
       let userId = getId();
       let token = getAuthToken();
       let open = this.openTime.slice(0, 2);
       let close = this.closeTime.slice(0, 2);
+      if(this.newImage1){
+        this.image1 = await saveImage(this.newImage1)
+      }
+      if(this.newImage2){
+        this.image2 = await saveImage(this.newImage2)
+      }
       let space = {
         hotel: this.hotel,
         city: this.city,
@@ -190,25 +207,29 @@ export default {
         wifi: this.wifi,
         projector: this.projector,
         screen: this.screen,
-        image1: this.image1,
-        image2: this.image2,
+        image1: this.image1.data,
+        image2: this.image2.data,
         description: this.description,
       };
       if (await createSpace(token, userId, space)) {
         Swal.fire("Espacio creado");
-        this.$router.push({name: 'User'});
-      }
+        this.$router.push({ name: "User" });
+      } 
     },
 
     // REDIRECCIÓN AL ÁREA PERSONAL
     cancel() {
-      this.$router.push({name: 'User'});
+      this.$router.push({ name: "User" });
     },
   },
 };
 </script>
 
 <style scoped>
+#main {
+  background: linear-gradient(white, #2c3e50);
+}
+
 h3 {
   margin-bottom: 20px;
 }
@@ -242,6 +263,10 @@ h3 {
   border-top: 1px solid lightgray;
   margin-top: 25px;
   margin-bottom: 20px;
+}
+
+#img {
+  width: 310px;
 }
 
 .last-box {
@@ -298,6 +323,10 @@ textarea {
   background-color: #f6f6f6;
 }
 
+textarea {
+  width: 310px;
+}
+
 h4 {
   padding-left: 45px;
 }
@@ -313,5 +342,4 @@ input {
 label {
   padding-left: 16px;
 }
-
 </style>

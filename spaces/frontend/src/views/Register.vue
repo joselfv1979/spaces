@@ -177,6 +177,7 @@ export default {
   display: flex;
   vertical-align: center;
   align-items: center;
+  background: linear-gradient(white,#2c3e50);
 }
 h2 {
   margin-bottom: 20px;

@@ -67,37 +67,66 @@ export async function listScores(id) {
 const dateFormat = (data) => {
     return data.map(item => {
         item.bookDate = moment(item.book_Date).utcOffset(120)
-        .format("DD-MM-YYYY");
+            .format("DD-MM-YYYY");
         return {
             username: item.username,
             rating: item.rating,
             review: item.review,
             scoreDate: item.bookDate,
-          };
+        };
     })
 }
 
 // FUNCIÓN PARA ACTUALIZAR UN ESPACIO
-export async function updateSpace(token, spaceId, space){
+export async function updateSpace(token, spaceId, space) {
     try {
         await axios.put(`${ENDPOINT}/${spaceId}`, {
             space
         },
-        {
-            headers: { 'Authorization': `${token}` }
-        })
+            {
+                headers: { 'Authorization': `${token}` }
+            })
         return true
     } catch (error) {
         console.log(error);
     }
 }
 
+export async function saveImage(image) {
+
+    let formData = new FormData();
+
+    formData.append('images', image);
+    console.log(formData)
+    try {
+        const img = await axios.post('http://localhost:8000/upload/',
+        formData,
+        {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        })
+        console.log(img);
+        return img
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+// export async function getImage(path) {
+//     try {
+//         const img = await axios.get(`http://localhost:8000/download`)
+//         console.log(img);
+//         return img
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
+
 // FUNCIÓN PARA REGISTRAR UN ESPACIO NUEVO 
 export async function createSpace(token, userId, space) {
 
     const { hotel, city, address, name, price, open, close, uLayout, classLayout, theaterLayout, meetingType, hallType, furniture, wifi, projector, screen, image1, image2, description } = space
 
-    if(!hotel || !city || !address || !name || !price || !open || !close || !image1 || !image2 || !description){
+    if (!hotel || !city || !address || !name || !price || !open || !close || !image1 || !image2 || !description) {
         Swal.fire("No puedes dejar campos vacíos");
         return
     }
@@ -106,9 +135,9 @@ export async function createSpace(token, userId, space) {
         await axios.post(`${ENDPOINT}`, {
             userId, space
         },
-        {
-            headers: { 'Authorization': `${token}` }
-        })
+            {
+                headers: { 'Authorization': `${token}` }
+            })
         return true
     } catch (error) {
         console.log(error);
@@ -120,9 +149,9 @@ export async function deleteSpace(id, token) {
 
     try {
         await axios.delete(`${ENDPOINT}/${id}`,
-        {
-            headers: { 'Authorization': `${token}` }
-        })
+            {
+                headers: { 'Authorization': `${token}` }
+            })
         return true
     } catch (error) {
         console.log(error);

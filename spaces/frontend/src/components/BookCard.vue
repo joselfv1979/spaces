@@ -3,19 +3,22 @@
   <div>
     <div class="card">
       <div>
-        <p>{{ book.hotel }}</p>
+        <strong><p>{{ book.hotel }}</p></strong>
       </div>
       <div>
         <p>{{ book.end }}</p>
       </div>
       <div>
         <p>
-        <span :class=" { green: book.status === 'Reserva pendiente'}">{{ book.status }}</span>
-      </p>
+          <strong><span :class=" { green: book.status === 'Reserva pendiente'}">{{ book.status }}</span></strong>
+        </p>
       </div>
       <!-- BOTÓN QUE LLAMA A LA FUNCIÓN PARA ENVIAR EL ÍNDICE DE LA RESERVA Y LANZA EL EVENTO DE VALORAR -->
       <button @click="score" :class=" { hidden: book.status === 'Reserva pendiente' }">Valorar</button>
       <button @click="remove" :class="{ hidden: book.status === 'Reserva consumida' }">Cancelar</button>
+      <button @click="detail">
+        Ver
+      </button>
     </div>
   </div>
 </template>
@@ -40,6 +43,10 @@ export default {
       let bookId = this.book.id;
       this.$emit("remove", bookId);
     },
+    detail() {
+      let bookId = this.book.id;
+      this.$emit("see", bookId);
+    }
   },
 };
 </script>
@@ -54,7 +61,7 @@ export default {
   min-width: 300px;
 }
 
-.card p{
+.card p {
   display: inline-block;
   padding: 0.667rem;
 }
@@ -65,4 +72,9 @@ export default {
 .green {
   color: green;
 }
+
+button {
+  width: 80px;
+}
+
 </style>

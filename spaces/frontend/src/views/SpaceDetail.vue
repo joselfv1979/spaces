@@ -1,17 +1,17 @@
 <!-- COMPONENTE DINÁMICO QUE RECIBE UN OBJETO ESPACIO Y LO MUESTRA -->
 <template>
   <div id="main">
-    <router-link :to="{ name: 'SpaceList' }">
-      <button>Volver</button>
-    </router-link>
     <!-- POR DEFECTO SE MUESTRA EL DIV DEL ESPACIO, AL PEDIR LAS VALORACIONES SE ESCONDE -->
     <div v-if="seeSpace">
+      <router-link :to="{ name: 'SpaceList' }">
+        <button>Volver</button>
+      </router-link>
       <h1>Detalles del espacio:</h1>
       <ul>
         <li>
           <div>
-            <img class="img-1" :src="space.image_1" />
-            <img class="img-2" :src="space.image_2" />
+            <img class="img-1" :src="'/images/'+space.image_1" />
+            <img class="img-2" :src="'/images/'+space.image_2" @error="imageLoadError" />
           </div>
           <div>
             <strong>
@@ -30,7 +30,7 @@
             <p>Precio: {{ space.price }} €/h</p>
           </div>
           <div>
-            <p>{{ space.description }}</p>
+            <p class="description">{{ space.description }}</p>
           </div>
           <div>
             <button @click="book()">Reservar</button>
@@ -39,13 +39,14 @@
         </li>
       </ul>
     </div>
-    <div v-else>
+    <div id="score" v-else>
       <!-- DECLARACIÓN DEL COMPONENTE QUE MUESTRA LAS VALORACIONES DE UN ESPACIO -->
       <h2>Valoraciones de usuarios:</h2>
       <!-- SE MUESTRA SI EXISTEN VALORACIONES -->
       <scoreslist v-if="seeScores" :scores="scores" />
       <!-- SINO EXISTEN -->
       <p v-else>No existen valoraciones</p>
+      <button @click="hide()">Volver</button>
     </div>
   </div>
 </template>
@@ -56,7 +57,7 @@ import scoreslist from "@/components/ScoresList.vue";
 import {
   getSpaceById,
   setSpaceId,
-  listScores,
+  listScores
 } from "./../../../backend/requests/space";
 import { getRole, getAuthToken } from "./../../../backend/requests/user";
 export default {
@@ -70,7 +71,7 @@ export default {
       space: {},
       scores: [],
       seeSpace: true,
-      spaceId: "",
+      spaceId: ""
     };
   },
   computed: {
@@ -81,9 +82,14 @@ export default {
   },
   methods: {
     // FUNCIÓN QUE OBTIENE UN ESPACIO DEL SERVIDOR
+    imageLoadError(error) {
+      console.log("Image failed to load");
+      console.log(error);
+    },
     async getSpace() {
       let result = await getSpaceById(this.$route.params.id);
       this.space = result.data[0];
+      console.log(this.space,'detail');
       this.spaceId = this.space.id;
       setSpaceId(this.spaceId);
     },
@@ -104,6 +110,9 @@ export default {
         this.$router.push({ name: "Login" });
       }
     },
+    hide() {
+      this.seeSpace = true;
+    },
   },
   // SE OBTIENE EL ESPACIO AL CARGAR LA VISTA
   created() {
@@ -113,8 +122,21 @@ export default {
 </script>
 
 <style scoped>
+#score {
+  height: 80vh;
+  background-image: url("./../assets/sala3.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+h2 {
+  margin-top: 20px;
+}
+
 li {
   width: auto;
+  max-width: 402px;
   background-color: white;
   border: 1px solid lightgray;
   border-radius: 10px;
@@ -137,6 +159,12 @@ img {
   margin-left: 1px;
 }
 
+.description {
+  text-align: justify;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
 @media screen and (max-width: 600px) {
   .img-1 {
     border-top-left-radius: 0;
@@ -146,3 +174,5 @@ img {
   }
 }
 </style>
+
+

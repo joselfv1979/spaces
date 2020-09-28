@@ -1,13 +1,6 @@
 // importación de los archivos para guardar los datos de pruebas de backend
 const spaceBd = require('../services/spaceService.js');
 
-const uploadFile = async (req, res) => {
-    let EDFile = req.files.file
-    EDFile.mv(`./files/${EDFile.name}`,err => {
-        if(err) return res.status(500).send({ message : err })
-        return res.status(200).send({ message : 'File upload' })
-    })
-}
 // función para obtener la lista de espacios, filtrados según los parámetros pasados en la 'req.query'
 const listSpaces = async (req, res) => {
 
@@ -162,6 +155,5 @@ module.exports = {
     getSpacesByProvider,
     editSpace,
     removeSpace,
-    getScores,
-    uploadFile
+    getScores
 }

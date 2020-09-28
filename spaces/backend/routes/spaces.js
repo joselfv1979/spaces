@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router(); // creación de la instancia de enrutamiento
 
 // importación de las funciones requeridas en cada endpoint
-const { uploadFile, listSpaces, addSpace, getSpace, editSpace, getSpacesByProvider, removeSpace, getScores } = require('../controllers/spaceController');
+const { listSpaces, addSpace, getSpace, editSpace, getSpacesByProvider, removeSpace, getScores } = require('../controllers/spaceController');
 
 // middlewares de autenticación:
 // isAuthenticated: general para los usuarios registrados. Específicos para determinados endpoints: 'isSpaceProvider' (para usuarios proveedores de espacios)
@@ -21,6 +21,5 @@ router.delete('/:id', isAuthenticated, isSpaceProvider, removeSpace); // elimina
 router.get('/', listSpaces); // endpoint de listado de espacios abierto a cualquier usuario
 
 router.post('/', isAuthenticated, isSpaceProvider, addSpace); // creación de espacios 
-router.post('/upload', uploadFile)
 
 module.exports = router; // exportación del enrutador

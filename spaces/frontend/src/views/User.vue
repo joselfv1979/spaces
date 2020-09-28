@@ -49,6 +49,15 @@
           </p>
           <button @click="goMyBooks()">Mis reservas</button>
         </div>
+        <div class="box">
+          <h3>Buscar salas</h3>
+          <p>
+            <strong>Encuentra la sala que necesitas</strong>
+          </p>
+          <router-link :to="{ name: 'Home' }">
+            <button>Buscar salas</button>
+          </router-link>
+        </div>
       </div>
     </div>
   </div>
@@ -58,7 +67,7 @@
 // IMPORTACIÓN DE COMPONENTES, FUNCIONES Y LIBRERÍAS EXTERNOS
 import axios from "axios";
 import Swal from "sweetalert2";
-import { getRole } from "./../../../backend/requests/user";
+import { getRole, deleteProfile, logout } from "./../../../backend/requests/user";
 
 export default {
   name: "User",
@@ -91,8 +100,8 @@ export default {
           Swal.fire({
             text: "La cuenta ha sido eliminada.",
             onClose: () => {
-              dropUser();
-              this.userLogout();
+              deleteProfile();
+              this.$emit("logout");
             },
           });
         }
@@ -129,10 +138,17 @@ export default {
 </script>
 
 <style scoped>
-
 h2 {
   margin-top: 20px;
   margin-bottom: 20px;
+}
+
+#main {
+  /* background: linear-gradient(white,#3b83bd); */
+  background-image: url("./../assets/sala8.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
 .content {
@@ -160,5 +176,4 @@ p {
 button {
   width: 130px;
 }
-
 </style>

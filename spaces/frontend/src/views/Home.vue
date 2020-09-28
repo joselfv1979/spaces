@@ -3,7 +3,7 @@
   <div id="main">
     <!-- TÍTULO PERSONALIZADO CON VUE-HEADFUL -->
     <vue-headful title="Spaces - Inicio" />
-    <div id="image">
+    <div id="image" v-if="seeImage">
       <div class="search-list">
         <!-- INPUTS VINCULADOS AL DATA CON V-MODEL -->
         <div>
@@ -19,12 +19,13 @@
       </div>
       <!-- BOTÓN PARA MOSTRAR LOS FILTROS DE BÚSQUEDA -->
       <div>
-        <button @click="seeFilter =! seeFilter">Más filtros</button>
+        <button @click="seeFilter()">Más filtros</button>
       </div>
     </div>
     <!-- ELEMENTO QUE CONTIENE LOS FILTROS DE BÚSQUEDA -->
-    <div class="container">
-      <div v-show="seeFilter" class="form">
+    <div class="container" v-else>
+      <div class="form">
+        <!-- <button @click="hideFilter()">Volver</button> -->
         <div class="time">
           <div id="date">
             <label>
@@ -109,6 +110,7 @@
         </div>
         <div class="apply-button">
           <button @click="buscar()">Aplicar</button>
+          <button @click="hideFilter()">Volver</button>
         </div>
       </div>
     </div>
@@ -127,7 +129,7 @@ export default {
   data() {
     // VARIABLES DE LA VISTA
     return {
-      seeFilter: false,
+      seeImage: true,
       spaces: [],
       city: "",
       hotel: "",
@@ -144,6 +146,12 @@ export default {
     };
   },
   methods: {
+    seeFilter(){
+      this.seeImage = false
+    },
+    hideFilter(){
+      this.seeImage = true
+    },
     // LLAMADA A LA FUNCIÓN PARA OBTENER LOS ESPACIOS
     async buscar() {
       const result = await this.getSpaces();
@@ -266,6 +274,11 @@ input:hover {
 .container {
   display: flex;
   justify-content: center;
+  background: radial-gradient(circle, black, white);
+  /* background-image: url("./../assets/sala13.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover; */
 }
 
 .form {
@@ -320,7 +333,7 @@ input:hover {
 }
 
 input {
-  border: 1px solid #3b83bd;
+  border: 2px solid #3b83bd;
 }
 
 .check {

@@ -138,7 +138,7 @@ export async function updateUser(userId, name, username, email, token) {
 }
 
 // FUNCIÓN QUE REALIZA LA PETICIÓN DE ELIMINAR LA CUENTA DE USUARIO 
-export async function dropUser(){
+export async function deleteProfile(){
 
   let userId = getId()
   let token = getAuthToken()

@@ -70,11 +70,12 @@ const getSpaceBooks = async (spaceId, userId) => {
 // comprobación de disponibilidad de espacio para unos horarios de reserva determinados
 const checkBookTime = async (spaceId, startTime, endTime) => {
 
-    const sql = 'select * from books where space_id = ? and (start_time >= ? AND end_time < ?) OR (start_time < ? AND end_time > ?) OR (start_time < ? AND end_time > ?) OR (start_time > ? AND end_time <= ?)'
+    const sql = 'select * from books where space_id = ? and start_time = ? OR (start_time >= ? AND end_time < ?) OR (start_time < ? AND end_time > ?) OR (start_time < ? AND end_time > ?) OR (start_time > ? AND end_time <= ?)'
     const connection = await database.connection();
-    const [rows] = await connection.execute(sql, [spaceId, startTime, endTime, startTime, startTime, endTime, endTime, startTime, endTime]);
+    const [rows] = await connection.execute(sql, [spaceId, startTime, startTime, endTime, startTime, startTime, endTime, endTime, startTime, endTime]);
 
     if (rows.length > 0) {
+        console.log(rows);
         return true; // si ya existen reservas en la franja horaria solicitada devuelve true
     }
 }

@@ -3,9 +3,9 @@
     <!-- TÍTULO PERSONALIZADO CON VUE-HEADFUL -->
     <vue-headful title="Espacios" />
     <div>
-      <router-link :to="{ name: 'User' }">
+      <!-- <router-link :to="{ name: 'SpaceProviderList' }">
         <button>Volver</button>
-      </router-link>
+      </router-link> -->
       <div class="container">
         <div class="form">
           <h3>Actualiza tu espacio</h3>
@@ -247,11 +247,11 @@ export default {
       };
       if (await updateSpace(token, this.id, space)) {
         Swal.fire("Espacio actualizado");
-        this.$router.push({ name: "User" });
+        this.$router.push({ name: "SpaceProviderList" });
       }
     },
     cancel() {
-      this.$router.push({ name: "User" });
+      this.$router.push({ name: "SpaceProviderList" });
     },
   },
   // SE OBTIENE EL ID DEL ESPACIO DEL LOCALSTORAGE Y SE PIDE EL ESPACIO AL SERVIDOR
@@ -263,6 +263,11 @@ export default {
 </script>
 
 <style scoped>
+
+#main {
+    background: linear-gradient(white,#2c3e50);
+}
+
 h3 {
   margin-bottom: 20px;
 }

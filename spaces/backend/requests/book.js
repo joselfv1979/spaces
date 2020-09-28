@@ -49,8 +49,8 @@ export async function getBook(token, spaceId, bookId) {
                 {
                     headers: { 'Authorization': `${token}` }
                 })
-        const formatBook = dateFormat(book.data);
-        return formatBook
+        const formattedBook = formatBook(book.data);
+        return formattedBook
     } catch (error) {
         console.log(error);
     }
@@ -71,7 +71,7 @@ export async function removeBook(id, token) {
 }
 
 // FUNCIÓN PARA FORMATEAR LAS FECHAS DE LA RESERVA RECIBIDA
-const dateFormat = data => {
+const formatBook = data => {
     let bookDate = moment(data.book_date)
         .utcOffset(120)
         .format("DD-MM-YYYY HH:mm");
@@ -84,6 +84,26 @@ const dateFormat = data => {
     data.book_date = bookDate;
     data.start_time = startTime;
     data.end_time = endTime;
+    let distribution = ''
+    if(data.layout === 'en U') distribution = 'en U'
+    if(data.layout === 'classLayout') distribution = 'en escuela'
+    if(data.layout === 'theaterLayout') distribution = 'en teatro'
+    data.layout = distribution
+    let equipment = ''
+    if(data.furniture) equipment = 'amueblado'
+    if(data.wifi) {
+        if(equipment === '') equipment = 'wifi'
+        else equipment += ', wifi'
+    }
+    if(data.projector) {
+        if(equipment === '') equipment = 'proyector'
+        else equipment += ', proyector'
+    }
+    if(data.screen) {
+        if(equipment === '') equipment = 'pantalla'
+        else equipment += ', pantalla'
+    }
+    data.equipment = equipment
     return data;
 }
 
@@ -96,8 +116,10 @@ export async function getBooks(token) {
                 {
                     headers: { 'Authorization': `${token}` }
                 })
-        console.log(books.data);
-        return books;
+                console.log('beforemap',books.data);
+                const result = books.data.map(formatBook)
+        console.log(result);
+        return result;
     } catch (error) {
         console.log(error);
     }

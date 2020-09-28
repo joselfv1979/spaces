@@ -2,7 +2,7 @@
 <template>
   <div>
     <div class="card">
-      <img :src="space.image_1" />
+      <img :src="'/images/'+space.image_1" />
       <div>
         <strong><p>{{ space.hotel }}</p></strong>
         <strong><p>{{ space.name }}</p></strong>

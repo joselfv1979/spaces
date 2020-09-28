@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <!-- DECLARACIÓN DE COMPONENTES -->
-    <menucustom v-on:logout="logoutUser" :username="username" :logged="logged" />
-    <router-view @login="doLogin" @update="usernameUpdate" @spaces="setSpaces" :spaces="spaces" />
+    <menucustom @logout="logoutUser" :username="username" :logged="logged" />
+    <router-view @login="doLogin" @update="usernameUpdate" @logout="logoutUser" @spaces="setSpaces" :spaces="spaces" />
     <footercustom />
   </div>
 </template>
@@ -43,7 +43,7 @@ export default {
       this.logged = false;
       logout();
       if (this.$route.name !== "Home") {
-        this.$router.push("/");
+        this.$router.push({name: 'Home'});
       }
     },
     // INICIALIZACIÓN DE VARIABLES CON LOS DATOS QUE ENVIA LA VISTA LOGIN

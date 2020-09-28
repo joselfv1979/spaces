@@ -71,7 +71,7 @@ export default {
     async deleteSpace(spaceId) {
       let token = getAuthToken();
       Swal.fire({
-        text: "Estás seguro de el espacio?",
+        text: "Estás seguro de eliminar el espacio?",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",

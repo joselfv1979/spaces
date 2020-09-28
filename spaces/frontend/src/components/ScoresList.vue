@@ -8,10 +8,10 @@
           <p>
             <strong># {{ score.username }}</strong>
           </p>
-          <p class="push">Puntuación: {{ score.rating }}</p>
+          <p class="push"><span>Puntuación:</span> {{ score.rating }}/5</p>
         </div>
         <div class="data">
-          <p class="comment">comentario: {{ score.review }}</p>
+          <p class="comment"><span>Comentario:</span> {{ score.review }}</p>
         </div>
       </li>
     </ul>
@@ -30,12 +30,18 @@ export default {
 
 <style scoped>
 li {
-  border: none;
   width: 50%;
+  background-color: white;
+  border: 1px solid lightgray;
+  border-radius: 10px;
 }
 
 .box {
   display: flex;
+}
+
+span {
+  color: #3b83bd;
 }
 
 .data {

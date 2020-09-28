@@ -225,19 +225,23 @@ export default {
     cancel() {
       // REDIRECCIÓN AL HOME
       removeSpaceId();
-      this.$router.push("/");
+      this.$router.push({ name: 'SpaceList' });
     },
     hide() {
       // OCULTACIÓN DEL MODAL Y REDIRECCIÓN AL HOME
       this.modal = false;
       removeSpaceId();
-      this.$router.push("/");
+      this.$router.push({name: 'User'});
     },
   },
 };
 </script>
 
 <style scoped>
+#main {
+ background: linear-gradient(white,#2c3e50);
+}
+
 .container {
   display: flex;
   justify-content: center;

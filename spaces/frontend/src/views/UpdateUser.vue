@@ -108,6 +108,10 @@ export default {
 </script>
 
 <style scoped>
+#main {
+  background: linear-gradient(white,#2c3e50);
+}
+
 .form {
   width: 400px;
   padding: 16px;
@@ -115,6 +119,10 @@ export default {
   margin: auto;
   background-color: #ccc;
   color: #2c3e50;
+}
+
+button {
+  background-color: #2c3e50;
 }
 
 .data {
