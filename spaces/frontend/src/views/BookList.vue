@@ -94,22 +94,24 @@ export default {
       this.seeModal = true;
       this.bookIndex = id;
     },
-
     // FUNCIÓN QUE OBTIENE LAS RESERVAS DE UN USUARIO
     async getUserBooks() {
       let token = getAuthToken();
       const result = await getBooks(token);
       localStorage.setItem("BOOKS", JSON.stringify(result.data));
-      const now = moment().format("YYYY-MM-DD");
+
+      const now = new Date()    
       this.books = result.map((item) => {
-        if (moment(item.end_time).isBefore(now)) {
+        const newDate = new Date(item.end);       
+        if (newDate < now) {
           item.status = "Reserva consumida";
         } else {
           item.status = "Reserva pendiente";
-        }
+        } 
         return item
       });
     },
+    // EL RESUMEN DE LA RESERVA
     seeDetail(bookId){
       let item = this.books.filter(item => item.id === bookId)
       this.book = item[0]
