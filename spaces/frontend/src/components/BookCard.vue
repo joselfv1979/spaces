@@ -6,7 +6,7 @@
         <strong><p>{{ book.hotel }}</p></strong>
       </div>
       <div>
-        <p>{{ book.end }}</p>
+        <p>{{ book.end_time }}</p>
       </div>
       <div>
         <p>
