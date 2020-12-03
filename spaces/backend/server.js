@@ -15,7 +15,7 @@ const profileRouter = require('./routes/profiles');
 const spaceRouter = require('./routes/spaces');
 const bookRouter = require('./routes/books');
 
-// SET STORAGE
+// CONFIGURACIÓN DEL ALMACENAMIENTO DE IMÁGENES
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, './../frontend/public/images/')
@@ -53,6 +53,7 @@ app.use('/profiles', profileRouter);
 app.use('/spaces', spaceRouter);
 app.use('/books', bookRouter);
 
+// Endpoint para subir imágenes al servidor
 app.post('/upload', upload.single('images'), (req, res) => {
     const { path, filename } = req.file
     const file = req.file
@@ -65,13 +66,6 @@ app.post('/upload', upload.single('images'), (req, res) => {
     }
     res.send(filename)
 })
-
-// app.use((error, req, res, next) => {
-//     if (error.code === 'INCORRECT_FILE_TYPE') {
-//         res.status(422).json({ error: 'Only images are allowed' });
-//         return;
-//     }
-// })
 
 // middleware que gestiona los errores generados
 app.use((error, req, res, next) => {
