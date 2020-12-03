@@ -1,4 +1,4 @@
-<!-- VISTA QUE MUESTRA INFORMACIÓN DETALLADA DE CADA ESPACIO -->
+<!-- COMPONENTE DE CADA ESPACIO EN FORMA DE TARJETA -->
 <template>
   <div>
     <div class="card">
