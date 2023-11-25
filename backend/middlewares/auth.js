@@ -7,7 +7,6 @@ const isAuthenticated = (req, res, next) => {
     const { authorization } = req.headers; // El token debe ir en el campo authorization de los headers
 
     try {
-        console.log(process.env.SECRET);
         const decodedToken = jwt.verify(authorization, process.env.SECRET);
         req.auth = decodedToken; // verificación del token
         console.log(req.auth);
